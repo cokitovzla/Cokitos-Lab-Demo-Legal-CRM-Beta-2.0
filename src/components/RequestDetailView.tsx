@@ -889,7 +889,7 @@ export const RequestDetailView: React.FC<RequestDetailViewProps> = ({
 
           {/* Items Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full min-w-[640px] text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
                   <th className="py-2.5 px-3">Concepto Jurídico</th>
@@ -1059,7 +1059,7 @@ export const RequestDetailView: React.FC<RequestDetailViewProps> = ({
 
           {/* Documents Table */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full min-w-[600px] text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
                   <th className="py-2.5 px-3">Documento</th>

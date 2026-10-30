@@ -633,7 +633,7 @@ function MainAppContent() {
 
       {/* Main View Switching: Web (Landing) vs CRM Workspace vs Client Portal */}
       {currentView === 'landing' && (
-        <main className="flex-1 w-full">
+        <main className="flex-1 w-full pb-20 sm:pb-0">
           <HeroSection
             onStartDiagnosis={() => handleToggleDiagnostic(true)}
             onExploreServices={() => handleNavigate('landing', 'que-hacemos')}
@@ -708,7 +708,7 @@ function MainAppContent() {
       )}
 
       {currentView === 'admin' && (
-        <main className="flex-1 w-full">
+        <main className="flex-1 w-full pb-20 sm:pb-0">
           <AdminCRM
             leads={isCrmPreview || !isAdmin ? previewLeads : leads}
             processes={isCrmPreview || !isAdmin ? previewProcesses : processes}
@@ -730,7 +730,7 @@ function MainAppContent() {
       )}
 
       {currentView === 'portal' && (
-        <main className="flex-1 w-full">
+        <main className="flex-1 w-full pb-20 sm:pb-0">
           <ClientPortal
             processes={processes}
             onBackToLanding={() => handleNavigate('landing', 'inicio')}

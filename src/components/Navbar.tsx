@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { CokitosLogo } from './CokitosLogo';
+import { VirtualJudgeIcon } from './VirtualJudgeIcon';
 import { 
   Shield, 
   LayoutDashboard, 
-  Menu, 
-  X, 
   Sparkles, 
   FolderKanban, 
   LogOut, 
@@ -14,7 +13,10 @@ import {
   Mail, 
   LogIn, 
   ChevronDown,
-  Check
+  Check,
+  Globe2,
+  Users,
+  X
 } from 'lucide-react';
 import { trackNavigation } from '../lib/analytics';
 
@@ -37,17 +39,20 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigate, 
   unreadLeadsCount = 0,
   onOpenAuth,
+  onToggleDiagnosticDrawer,
+  onToggleBlogDrawer,
+  isDiagnosticOpen,
+  isBlogOpen,
 }) => {
   const { currentUser, logout } = useAuth();
   const { language, setLanguage, t, languagesList } = useLanguage();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [mobileLangModalOpen, setMobileLangModalOpen] = useState(false);
 
   // Auto-close dropdown when viewport is resized back to desktop size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
-        setMobileMenuOpen(false);
         setLangDropdownOpen(false);
       }
     };
@@ -67,14 +72,12 @@ export const Navbar: React.FC<NavbarProps> = ({
   const handleNavClick = (sectionId: string) => {
     trackNavigation(sectionId, 'navbar');
     onNavigate('landing', sectionId);
-    setMobileMenuOpen(false);
   };
 
   const handleLogoClick = () => {
     trackNavigation('inicio', 'navbar_logo');
     onNavigate('landing', 'inicio');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setMobileMenuOpen(false);
   };
 
   const currentLangObj = languagesList.find(l => l.code === language) || languagesList[0];
@@ -240,191 +243,216 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           </div>
 
-          {/* Zone 3 Responsive (< lg: Mobile & Tablet) */}
-          <div className="flex lg:hidden items-center gap-1.5 shrink-0">
+          {/* Zone 3 Responsive (< lg: Mobile & Tablet Header Action - Astro Juez Virtual & Language) */}
+          <div className="flex lg:hidden items-center gap-2 shrink-0">
             {/* Quick Language Mobile Toggle */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="px-2 py-1 bg-slate-100 text-slate-800 text-xs font-bold rounded-lg border border-slate-200 flex items-center gap-1 cursor-pointer"
-              >
-                <span>{currentLangObj.flag}</span>
-                <span className="font-mono text-[11px]">{currentLangObj.code.toUpperCase()}</span>
-              </button>
-              {langDropdownOpen && (
-                <div className="absolute right-0 mt-1 w-40 bg-white border border-slate-200 rounded-xl shadow-xl p-1 z-50 space-y-0.5">
-                  {languagesList.map((lang) => (
-                    <button
-                      key={lang.code}
-                      type="button"
-                      onClick={() => {
-                        setLanguage(lang.code);
-                        setLangDropdownOpen(false);
-                      }}
-                      className={`w-full flex items-center justify-between px-2.5 py-1 rounded-md text-xs cursor-pointer ${
-                        language === lang.code ? 'bg-blue-50 text-[#0071ce] font-bold' : 'text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span>{lang.flag} {lang.label}</span>
-                      {language === lang.code && <Check className="w-3 h-3 text-[#0071ce]" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Quick CRM/Web single toggle button for mobile */}
             <button
-              onClick={() => onNavigate(currentView === 'admin' ? 'landing' : 'admin')}
-              className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-colors flex items-center gap-1 cursor-pointer ${
-                currentView === 'admin' 
-                  ? 'bg-emerald-600 text-white shadow-xs' 
-                  : 'bg-slate-900 text-white'
-              }`}
-              title={currentView === 'admin' ? t.nav.backToWeb : t.nav.crm}
+              type="button"
+              onClick={() => setMobileLangModalOpen(true)}
+              className="px-2.5 py-1.5 bg-slate-100 hover:bg-[#0071ce] hover:text-white active:bg-[#0071ce] active:text-white text-slate-800 text-xs font-bold rounded-xl border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-all duration-150 active:scale-95 shadow-2xs"
+              title="Cambiar idioma / Change language"
+              aria-label="Abrir selector de idiomas"
             >
-              {currentView === 'admin' ? (
-                <>
-                  <Briefcase className="w-3.5 h-3.5 text-white" />
-                  <span>Web</span>
-                </>
-              ) : (
-                <>
-                  <LayoutDashboard className="w-3.5 h-3.5 text-blue-300" />
-                  <span>CRM</span>
-                </>
-              )}
+              <span className="text-sm">{currentLangObj.flag}</span>
+              <span className="font-mono text-xs">{currentLangObj.code.toUpperCase()}</span>
+              <ChevronDown className="w-3 h-3 opacity-60" />
             </button>
 
-            {/* Hamburger button */}
+            {/* Astro Virtual Judge Launcher in Top Mobile Header */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 text-neutral-700 hover:text-[#0071ce] hover:bg-blue-50/60 rounded-lg focus:outline-none cursor-pointer transition-colors"
-              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-              aria-expanded={mobileMenuOpen}
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-astro-ai'))}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#0B192C] via-[#1E3E62] to-[#0071ce] hover:brightness-110 active:scale-95 text-white rounded-xl shadow-xs border border-sky-400/40 transition-all text-xs font-bold cursor-pointer"
+              title="Astro · Juez Virtual de Cokito's Lab"
+              aria-label="Abrir juez virtual Astro"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5 text-[#0071ce]" /> : <Menu className="w-5 h-5" />}
+              <VirtualJudgeIcon size={24} showBadge />
+              <span className="text-[11px] font-display font-bold text-sky-100 tracking-wide">
+                Astro AI
+              </span>
             </button>
           </div>
 
         </div>
       </div>
 
-      {/* Responsive Mobile Drawer Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-neutral-200 bg-white px-4 pt-3 pb-5 space-y-2.5 animate-in fade-in slide-in-from-top-2 shadow-lg max-h-[80vh] overflow-y-auto">
-          <div className="flex flex-col space-y-1 text-sm font-semibold text-neutral-700">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`text-left py-2 px-3 rounded-lg transition-colors cursor-pointer flex items-center justify-between ${
-                  currentView === 'landing' && activeSection === item.id 
-                    ? 'text-[#0071ce] bg-blue-50 font-bold' 
-                    : 'hover:text-[#0071ce] hover:bg-slate-50'
-                }`}
-              >
-                <span>{item.label}</span>
-                <span className="text-xs text-slate-400">→</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="pt-2.5 border-t border-neutral-100 flex flex-col gap-2">
-            {currentView === 'admin' ? (
-              <div className="space-y-1.5">
-                <div className="w-full py-2 px-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>CRM activo</span>
+      {/* Mobile Language Selector Modal / Bottom Sheet */}
+      {mobileLangModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200"
+          onClick={() => setMobileLangModalOpen(false)}
+        >
+          <div 
+            className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl p-5 border border-slate-200 animate-in slide-in-from-bottom-6 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-3.5 mb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#0071ce] flex items-center justify-center">
+                  <Globe2 className="w-4 h-4" />
                 </div>
-                <button
-                  onClick={() => {
-                    onNavigate('landing');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full py-2 px-4 text-xs font-bold rounded-lg bg-[#0071ce] text-white hover:bg-[#005fb0] flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                >
-                  <Briefcase className="w-3.5 h-3.5" />
-                  <span>{t.nav.backToWeb}</span>
-                </button>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">
+                    {language === 'es' ? 'Seleccionar idioma' : 'Select language'}
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    {language === 'es' ? 'Disponible en 6 idiomas europeos' : 'Available in 6 European languages'}
+                  </p>
+                </div>
               </div>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    onNavigate('admin');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full py-2 px-4 text-xs font-bold rounded-lg flex items-center justify-center gap-2 cursor-pointer shadow-xs transition-colors bg-slate-900 text-white hover:bg-slate-800"
-                >
-                  <LayoutDashboard className="w-4 h-4 text-blue-400" />
-                  <span>{t.nav.crm}</span>
-                </button>
+              <button
+                type="button"
+                onClick={() => setMobileLangModalOpen(false)}
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                aria-label="Cerrar selector de idiomas"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-                <button
-                  onClick={() => {
-                    onOpenAuth('login');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full py-2 px-4 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold rounded-lg border border-slate-300 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <LogIn className="w-4 h-4 text-[#0071ce]" />
-                  <span>{t.nav.login} / {t.nav.register}</span>
-                </button>
-              </>
-            )}
+            {/* List of 6 Languages */}
+            <div className="grid grid-cols-2 gap-2">
+              {languagesList.map((lang) => {
+                const isSelected = language === lang.code;
+                return (
+                  <button
+                    key={lang.code}
+                    type="button"
+                    onClick={() => {
+                      setLanguage(lang.code);
+                      setMobileLangModalOpen(false);
+                    }}
+                    className={`flex items-center justify-between p-3 rounded-xl border text-left transition-all duration-150 cursor-pointer active:scale-95 ${
+                      isSelected
+                        ? 'bg-[#0071ce] text-white border-[#0071ce] font-extrabold shadow-md ring-2 ring-blue-300'
+                        : 'bg-slate-50 text-slate-800 border-slate-200 hover:border-[#0071ce] hover:bg-blue-50/60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xl shrink-0">{lang.flag}</span>
+                      <div className="min-w-0">
+                        <div className={`text-xs truncate ${isSelected ? 'text-white' : 'text-slate-900 font-bold'}`}>
+                          {lang.label}
+                        </div>
+                        <div className={`text-[10px] font-mono uppercase ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                          {lang.code}
+                        </div>
+                      </div>
+                    </div>
+                    {isSelected && <Check className="w-4 h-4 text-white shrink-0" />}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Close button pill */}
+            <button
+              type="button"
+              onClick={() => setMobileLangModalOpen(false)}
+              className="w-full mt-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+            >
+              {language === 'es' ? 'Listo' : 'Done'}
+            </button>
           </div>
         </div>
       )}
 
-      {/* Fixed Mobile Bottom Tab Bar - Strictly bounded without overflow */}
+      {/* Fixed Mobile Bottom Tab Bar - Primary Mobile Navigation */}
       <nav 
         aria-label="Navegación móvil inferior"
-        className="sm:hidden fixed bottom-0 left-0 right-0 z-40 w-full max-w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/90 py-1 px-1 flex items-center justify-around shadow-lg pb-[max(0.35rem,env(safe-area-inset-bottom))] box-border overflow-x-hidden"
+        className="sm:hidden fixed bottom-0 left-0 right-0 z-40 w-full max-w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/90 h-16 py-1 px-1.5 flex items-center justify-around shadow-xl pb-[max(0.4rem,env(safe-area-inset-bottom))] box-border overflow-x-hidden"
       >
+        {/* 1. Inicio */}
         <button
           onClick={handleLogoClick}
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] px-1 py-0.5 transition-colors ${
-            currentView === 'landing' && (!activeSection || activeSection === 'inicio') ? 'text-[#0071ce] font-bold' : 'text-[#626967] hover:text-[#3e4543]'
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            currentView === 'landing' && (!activeSection || activeSection === 'inicio') 
+              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
+              : 'text-slate-600 hover:text-[#0071ce] hover:bg-blue-50/60'
           }`}
+          title="Ir al inicio"
         >
-          <Shield className="w-4.5 h-4.5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">Inicio</span>
+          <Shield className="w-4.5 h-4.5 mb-0.5 shrink-0" />
+          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">Inicio</span>
         </button>
 
-        <button
-          onClick={() => handleNavClick('por-que')}
-          className="flex flex-col items-center justify-center min-w-[50px] min-h-[44px] px-1 py-0.5 text-[#626967] hover:text-[#3e4543] transition-colors"
-        >
-          <Briefcase className="w-4.5 h-4.5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">{t.nav.whyUs}</span>
-        </button>
-
+        {/* 2. Servicios (Qué hacemos) */}
         <button
           onClick={() => handleNavClick('que-hacemos')}
-          className="flex flex-col items-center justify-center min-w-[50px] min-h-[44px] px-1 py-0.5 text-[#626967] hover:text-[#3e4543] transition-colors"
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            currentView === 'landing' && activeSection === 'que-hacemos' 
+              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
+              : 'text-slate-600 hover:text-[#0071ce] hover:bg-blue-50/60'
+          }`}
+          title="Ver servicios y qué hacemos"
         >
-          <Sparkles className="w-4.5 h-4.5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">{t.nav.services}</span>
+          <Sparkles className="w-4.5 h-4.5 mb-0.5 shrink-0" />
+          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">{t.nav.services}</span>
         </button>
 
+        {/* 3. Equipo */}
+        <button
+          onClick={() => handleNavClick('equipo')}
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            currentView === 'landing' && activeSection === 'equipo' 
+              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
+              : 'text-slate-600 hover:text-[#0071ce] hover:bg-blue-50/60'
+          }`}
+          title="Ver equipo y especialistas"
+        >
+          <Users className="w-4.5 h-4.5 mb-0.5 shrink-0" />
+          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">{t.nav.team}</span>
+        </button>
+
+        {/* 4. Contacto */}
         <button
           onClick={() => handleNavClick('contacto')}
-          className="flex flex-col items-center justify-center min-w-[50px] min-h-[44px] px-1 py-0.5 text-[#626967] hover:text-[#3e4543] transition-colors"
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            currentView === 'landing' && activeSection === 'contacto' 
+              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
+              : 'text-slate-600 hover:text-[#0071ce] hover:bg-blue-50/60'
+          }`}
+          title="Contacto y sedes"
         >
-          <Mail className="w-4.5 h-4.5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">{t.nav.contact}</span>
+          <Mail className="w-4.5 h-4.5 mb-0.5 shrink-0" />
+          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">{t.nav.contact}</span>
         </button>
 
+        {/* 5. Idioma (with flag & modal toggle) */}
+        <button
+          onClick={() => setMobileLangModalOpen(true)}
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            mobileLangModalOpen 
+              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
+              : 'text-slate-700 hover:text-[#0071ce] hover:bg-blue-50/60'
+          }`}
+          title="Cambiar idioma"
+        >
+          <span className="text-base leading-none mb-0.5 shrink-0">{currentLangObj.flag}</span>
+          <span className="text-[10px] font-mono font-bold tracking-tight uppercase truncate max-w-full">
+            {currentLangObj.code}
+          </span>
+        </button>
+
+        {/* 6. CRM / Web Switch */}
         <button
           onClick={() => onNavigate(currentView === 'admin' ? 'landing' : 'admin')}
-          className={`flex flex-col items-center justify-center min-w-[50px] min-h-[44px] px-1 py-0.5 transition-colors ${
-            currentView === 'admin' ? 'text-emerald-600 font-bold' : 'text-neutral-500 hover:text-neutral-900'
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            currentView === 'admin' 
+              ? 'text-white bg-emerald-600 font-extrabold shadow-sm' 
+              : 'text-slate-900 bg-slate-100 hover:bg-[#0071ce] hover:text-white font-bold'
           }`}
+          title={currentView === 'admin' ? t.nav.backToWeb : 'Ir al CRM'}
         >
-          <LayoutDashboard className="w-4.5 h-4.5 mb-0.5" />
-          <span className="text-[10px] tracking-tight">{currentView === 'admin' ? 'Web' : 'CRM'}</span>
+          {currentView === 'admin' ? (
+            <Briefcase className="w-4.5 h-4.5 mb-0.5 shrink-0" />
+          ) : (
+            <LayoutDashboard className="w-4.5 h-4.5 mb-0.5 shrink-0" />
+          )}
+          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">
+            {currentView === 'admin' ? 'Web' : 'CRM'}
+          </span>
         </button>
       </nav>
     </header>

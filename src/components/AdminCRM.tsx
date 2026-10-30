@@ -779,16 +779,20 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
         {/* VIEW 2: HIGH-DENSITY TABLE */}
         {activeView === 'table' && (
           <div className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-xs w-full max-w-full">
+            <div className="sm:hidden text-center text-[10px] text-slate-500 py-1.5 bg-slate-50 border-b border-neutral-200 flex items-center justify-center gap-1">
+              <span>↔</span>
+              <span>Desliza horizontalmente para ver todas las columnas</span>
+            </div>
             <div className="overflow-x-auto w-full max-w-full">
-              <table className="w-full min-w-[720px] table-fixed text-left border-collapse text-xs">
+              <table className="w-full min-w-[940px] table-fixed text-left border-collapse text-xs">
                 <colgroup>
                   <col style={{ width: '22%' }} />
+                  <col style={{ width: '13%' }} />
                   <col style={{ width: '15%' }} />
-                  <col style={{ width: '17%' }} />
                   <col style={{ width: '10%' }} />
-                  <col style={{ width: '16%' }} />
-                  <col style={{ width: '10%' }} />
-                  <col style={{ width: '10%' }} />
+                  <col style={{ width: '13%' }} />
+                  <col style={{ width: '9%' }} />
+                  <col style={{ width: '18%' }} />
                 </colgroup>
                 <thead>
                   <tr className="bg-neutral-50 border-b border-neutral-200 text-neutral-500 font-semibold uppercase tracking-wider">
@@ -841,8 +845,8 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                       <td className="py-3 px-4 font-mono text-neutral-400 text-[11px]">
                         {lead.createdAt}
                       </td>
-                      <td className="py-3 px-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
+                      <td className="py-3 px-4 text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
                           <button
                             type="button"
                             onClick={(e) => {
@@ -1119,8 +1123,12 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                   {/* VIEW 1: COMPANIES TABLE (High-density, coherent, 1-to-N relationships) */}
                   {contactDirectoryView === 'companies' && (
                     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+                      <div className="sm:hidden text-center text-[10px] text-slate-500 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-center gap-1">
+                        <span>↔</span>
+                        <span>Desliza horizontalmente para ver todas las columnas</span>
+                      </div>
                       <div className="overflow-x-auto">
-                        <table className="w-full table-fixed border-collapse text-left text-xs">
+                        <table className="w-full min-w-[880px] table-fixed border-collapse text-left text-xs">
                           <colgroup>
                             <col style={{ width: '25%' }} />
                             <col style={{ width: '16%' }} />
@@ -1240,7 +1248,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                                   </td>
 
                                   {/* Action */}
-                                  <td className="py-3.5 px-4 text-right">
+                                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
                                     <button
                                       type="button"
                                       onClick={(e) => {
@@ -1275,8 +1283,12 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                   {/* VIEW 2: PEOPLE TABLE (High-density, coherent with companies) */}
                   {contactDirectoryView === 'people' && (
                     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
+                      <div className="sm:hidden text-center text-[10px] text-slate-500 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-center gap-1">
+                        <span>↔</span>
+                        <span>Desliza horizontalmente para ver todas las columnas</span>
+                      </div>
                       <div className="overflow-x-auto">
-                        <table className="w-full table-fixed border-collapse text-left text-xs">
+                        <table className="w-full min-w-[880px] table-fixed border-collapse text-left text-xs">
                           <colgroup>
                             <col style={{ width: '25%' }} />
                             <col style={{ width: '20%' }} />
@@ -1403,7 +1415,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                                   </td>
 
                                   {/* Action */}
-                                  <td className="py-3.5 px-4 text-right">
+                                  <td className="py-3.5 px-4 text-right whitespace-nowrap">
                                     <button
                                       type="button"
                                       onClick={(e) => {
@@ -1549,8 +1561,12 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                       </button>
                     </div>
                   </div>
+                  <div className="sm:hidden text-center text-[10px] text-slate-500 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-center gap-1">
+                    <span>↔</span>
+                    <span>Desliza horizontalmente para ver todas las columnas</span>
+                  </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full table-fixed border-collapse text-left text-xs">
+                    <table className="w-full min-w-[880px] table-fixed border-collapse text-left text-xs">
                       <colgroup><col style={{ width: '22%' }} /><col style={{ width: '13%' }} /><col style={{ width: '15%' }} /><col style={{ width: '14%' }} /><col style={{ width: '8%' }} /><col style={{ width: '14%' }} /><col style={{ width: '14%' }} /></colgroup>
                       <thead><tr className="border-b border-slate-200 bg-slate-50 text-[10px] font-semibold uppercase tracking-wider text-slate-500 sm:text-xs"><th className="px-4 py-3">Trámite</th><th className="px-4 py-3">Categoría</th><th className="px-4 py-3">Abogado líder</th><th className="px-4 py-3">Estado actual</th><th className="px-4 py-3">Avance</th><th className="px-4 py-3">Próximo hito</th><th className="px-4 py-3 text-right">Acciones</th></tr></thead>
                       <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -1561,7 +1577,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
                           <td className="px-4 py-3"><span className="inline-flex rounded-full bg-blue-50 px-2 py-1 text-[10px] font-semibold uppercase text-blue-800">{proc.status.replace('_', ' ')}</span></td>
                           <td className="px-4 py-3 font-mono font-bold tabular-nums">{proc.progress}%</td>
                           <td className="px-4 py-3"><div className="line-clamp-2 text-slate-600">{proc.nextMilestone || 'Sin hito definido'}</div></td>
-                          <td className="px-4 py-3 text-right"><button type="button" onClick={(e) => { e.stopPropagation(); setSelectedProcessToEdit(proc); }} className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-800 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">Actualizar</button></td>
+                          <td className="px-4 py-3 text-right whitespace-nowrap"><button type="button" onClick={(e) => { e.stopPropagation(); setSelectedProcessToEdit(proc); }} className="rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-[11px] font-semibold text-slate-700 transition-all hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-800 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">Actualizar</button></td>
                         </tr>)}
                         {visibleProcesses.length === 0 && <tr><td colSpan={7} className="px-4 py-12 text-center text-sm text-slate-500">No hay expedientes en esta etapa. Los trámites finalizados se consultan desde los perfiles de cliente y empresa.</td></tr>}
                       </tbody>
