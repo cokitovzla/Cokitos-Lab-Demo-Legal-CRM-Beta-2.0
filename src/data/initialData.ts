@@ -143,42 +143,42 @@ export const BINLEGAL_TEAM: TeamMember[] = [
   {
     id: 'maria-fernandez',
     name: 'María Fernández',
-    role: 'Socia · Corporativo & Fusiones',
-    bio: 'Especialista en derecho societario, fusiones, reestructuraciones y pactos de socios. Ha estructurado más de 120 sociedades mercantiles y rondas de financiamiento transfronterizo.',
-    specialty: 'Arquitectura societaria, pactos de socios y gobierno corporativo',
+    role: 'Socia · Corporativo & Pactos de Socios (Módulo 01)',
+    bio: 'Especialista en estructuración societaria, redacción de pactos de socios (shareholders agreements), vesting de fundadores y gobierno corporativo preventivo.',
+    specialty: 'Corporativo, pactos de socios, vesting y rondas de capital',
     experience: '+9 años de experiencia en firmas corporativas',
     email: 'mfernandez@jurisnova.legal',
     photoUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&h=400&q=80'
   },
   {
-    id: 'ricardo-salas',
-    name: 'Ricardo Salas',
-    role: 'Socio Fundador · Estrategia & Mediación',
-    bio: 'Especialista en estructuración legal preventiva y mediación comercial. Enfocado en dotar a las empresas de herramientas sólidas para superar la temida barrera de los 3.5 años.',
-    specialty: 'Estrategia preventiva, contratos complejos y arbitraje',
-    experience: '+10 años acompañando empresas en expansión',
-    email: 'rsalas@jurisnova.legal',
-    photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80'
+    id: 'ana-rivas',
+    name: 'Ana Rivas',
+    role: 'Directora · Propiedad Intelectual & Marcas (Módulo 02)',
+    bio: 'Focalizada en blindaje de marcas internacionales ante EUIPO y oficinas locales, registro de software, custodia de código fuente y acuerdos de confidencialidad.',
+    specialty: 'Marcas, patentes, derechos de autor sobre software y secreto empresarial',
+    experience: '+7 años en propiedad industrial e intelectual',
+    email: 'arivas@jurisnova.legal',
+    photoUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&h=400&q=80'
   },
   {
     id: 'carlos-bermudez',
     name: 'Carlos Bermúdez',
-    role: 'Director · Regulatorio & Compliance',
-    bio: 'Experto en compliance normativo, permisos sectoriales y regulación comercial europea e internacional. Asesora a industrias alimentarias, fintech, retail y manufactura.',
-    specialty: 'Derecho administrativo, licencias comerciales y permisología',
+    role: 'Director · Regulatorio & Compliance RGPD (Módulo 03)',
+    bio: 'Experto en adecuación al RGPD, licencias sectoriales, comercio electrónico y prevención de sanciones administrativas para empresas y plataformas digitales.',
+    specialty: 'Compliance RGPD, licencias operativas y derecho administrativo',
     experience: '+8 años en consultoría regulatoria y de compliance',
     email: 'cbermudez@jurisnova.legal',
     photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&h=400&q=80'
   },
   {
-    id: 'ana-rivas',
-    name: 'Ana Rivas',
-    role: 'Asociada · Propiedad Intelectual & Marcas',
-    bio: 'Focalizada en protección de marcas, patentes, software y secretos empresariales. Ha liderado más de 300 solicitudes de signos distintivos y defensas ante oposiciones.',
-    specialty: 'Marcas, patentes, derechos de autor en entornos digitales y software',
-    experience: '+6 años en propiedad industrial e intelectual',
-    email: 'arivas@jurisnova.legal',
-    photoUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&h=400&q=80'
+    id: 'ricardo-salas',
+    name: 'Ricardo Salas',
+    role: 'Socio · Laboral & Mediación Comercial (Módulos 04 y 05)',
+    bio: 'Especialista en esquemas de contratación de talento, stock options, y resolución extrajudicial de disputas comerciales y de contratos mercantiles sin ir a juicio.',
+    specialty: 'Contratación laboral, phantom shares, mediación y resolución de conflictos',
+    experience: '+10 años acompañando empresas en expansión',
+    email: 'rsalas@jurisnova.legal',
+    photoUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&h=400&q=80'
   }
 ];
 

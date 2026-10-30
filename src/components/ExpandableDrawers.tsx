@@ -27,8 +27,8 @@ export const ExpandableDrawers: React.FC<ExpandableDrawersProps> = ({
   const { language, t } = useLanguage();
 
   return (
-    <section className="py-8 sm:py-12 bg-slate-100/70 border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+    <section className="py-6 sm:py-8 bg-slate-100/70 border-b border-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
 
         {/* 1. Gaveta Desplegable: Diagnóstico Legal Preventivo */}
         <div id="diagnostico" className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden transition-all scroll-mt-24">
