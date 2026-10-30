@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
+import { Language, useLanguage } from '../context/LanguageContext';
 import { CokitosLogo } from './CokitosLogo';
 import { VirtualJudgeIcon } from './VirtualJudgeIcon';
 import { 
@@ -47,13 +48,22 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { currentUser, logout } = useAuth();
   const { language, setLanguage, t, languagesList } = useLanguage();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [mobileTopLangDropdownOpen, setMobileTopLangDropdownOpen] = useState(false);
   const [mobileLangModalOpen, setMobileLangModalOpen] = useState(false);
+
+  const handleSelectLanguage = (code: Language) => {
+    setLanguage(code);
+    setLangDropdownOpen(false);
+    setMobileTopLangDropdownOpen(false);
+    setMobileLangModalOpen(false);
+  };
 
   // Auto-close dropdown when viewport is resized back to desktop size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
         setLangDropdownOpen(false);
+        setMobileTopLangDropdownOpen(false);
       }
     };
     window.addEventListener('resize', handleResize);
@@ -83,10 +93,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   const currentLangObj = languagesList.find(l => l.code === language) || languagesList[0];
 
   return (
-    <header 
-      style={{ position: 'sticky', top: 0 }}
-      className="sticky top-0 z-50 w-full max-w-full bg-white/95 backdrop-blur-md border-b border-neutral-200/90 transition-all shadow-xs overflow-x-clip"
-    >
+    <>
+      <header 
+        style={{ position: 'sticky', top: 0 }}
+        className="sticky top-0 z-50 w-full max-w-full bg-white/95 backdrop-blur-md border-b border-neutral-200/90 transition-all shadow-xs overflow-x-clip"
+      >
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-3 lg:gap-4 h-14 sm:h-15">
           
@@ -181,10 +192,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       key={lang.code}
                       type="button"
-                      onClick={() => {
-                        setLanguage(lang.code);
-                        setLangDropdownOpen(false);
-                      }}
+                      onClick={() => handleSelectLanguage(lang.code)}
                       className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
                         language === lang.code ? 'bg-blue-50 text-[#0071ce] font-bold' : 'text-slate-700 hover:bg-slate-100'
                       }`}
@@ -236,18 +244,55 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Zone 3 Responsive (< lg: Mobile & Tablet Header Action - Astro Juez Virtual & Language) */}
           <div className="flex lg:hidden items-center gap-2 shrink-0">
-            {/* Quick Language Mobile Toggle */}
-            <button
-              type="button"
-              onClick={() => setMobileLangModalOpen(true)}
-              className="px-2.5 py-1.5 bg-slate-100 hover:bg-[#0071ce] hover:text-white active:bg-[#0071ce] active:text-white text-slate-800 text-xs font-bold rounded-xl border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-all duration-150 active:scale-95 shadow-2xs"
-              title="Cambiar idioma / Change language"
-              aria-label="Abrir selector de idiomas"
-            >
-              <span className="text-sm">{currentLangObj.flag}</span>
-              <span className="font-mono text-xs">{currentLangObj.code.toUpperCase()}</span>
-              <ChevronDown className="w-3 h-3 opacity-60" />
-            </button>
+            {/* Quick Language Mobile Toggle with direct dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setMobileTopLangDropdownOpen(!mobileTopLangDropdownOpen)}
+                className="px-2.5 py-1.5 bg-slate-100 hover:bg-[#0071ce] hover:text-white active:bg-[#0071ce] active:text-white text-slate-800 text-xs font-bold rounded-xl border border-slate-200 flex items-center gap-1.5 cursor-pointer transition-all duration-150 active:scale-95 shadow-2xs"
+                title="Changer de langue / Cambiar idioma"
+                aria-label="Sélecteur de langue"
+              >
+                <span className="text-sm">{currentLangObj.flag}</span>
+                <span className="font-mono text-xs">{currentLangObj.code.toUpperCase()}</span>
+                <ChevronDown className="w-3 h-3 opacity-60" />
+              </button>
+
+              {/* Direct dropdown on mobile top header */}
+              {mobileTopLangDropdownOpen && (
+                <div 
+                  className="absolute right-0 mt-1.5 w-48 bg-white border border-slate-200 rounded-2xl shadow-2xl p-1.5 z-50 animate-in fade-in slide-in-from-top-1 space-y-1"
+                >
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-2 py-1 border-b border-slate-100">
+                    {language === 'fr' ? 'Langue' : language === 'es' ? 'Idioma' : 'Language'}
+                  </div>
+                  {languagesList.map((lang) => {
+                    const isSelected = language === lang.code;
+                    return (
+                      <button
+                        key={lang.code}
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectLanguage(lang.code);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer active:scale-95 ${
+                          isSelected 
+                            ? 'bg-[#0071ce] text-white font-bold shadow-xs' 
+                            : 'text-slate-700 hover:bg-slate-100 active:bg-blue-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <span className="text-base">{lang.flag}</span>
+                          <span>{lang.label}</span>
+                        </div>
+                        {isSelected && <Check className="w-4 h-4 text-white" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
             {/* Astro Virtual Judge Launcher in Top Mobile Header */}
             <button
@@ -266,90 +311,106 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         </div>
       </div>
+    </header>
 
-      {/* Mobile Language Selector Modal / Bottom Sheet */}
-      {mobileLangModalOpen && (
+    {/* 
+      Mobile Language Selector Modal / Bottom Sheet
+      Rendered via createPortal to document.body to guarantee it is 100% free from
+      any header backdrop-blur-md containing block or overflow clipping on all mobile devices.
+    */}
+    {mobileLangModalOpen && typeof document !== 'undefined' && createPortal(
+      <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center">
+        {/* Backdrop overlay */}
         <div 
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
           onClick={() => setMobileLangModalOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Modal Dialog Content */}
+        <div 
+          className="relative z-10 w-full max-w-md bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl p-5 border border-slate-200 animate-in slide-in-from-bottom-6 duration-200 pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+          onClick={(e) => e.stopPropagation()}
         >
-          <div 
-            className="w-full max-w-md bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl p-5 border border-slate-200 animate-in slide-in-from-bottom-6 duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between pb-3.5 mb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#0071ce] flex items-center justify-center">
-                  <Globe2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-slate-900">
-                    {language === 'es' ? 'Seleccionar idioma' : 'Select language'}
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    {language === 'es' ? 'Disponible en 6 idiomas europeos' : 'Available in 6 European languages'}
-                  </p>
-                </div>
+          {/* Modal Header */}
+          <div className="flex items-center justify-between pb-3.5 mb-3 border-b border-slate-100">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#0071ce] flex items-center justify-center">
+                <Globe2 className="w-5 h-5" />
               </div>
-              <button
-                type="button"
-                onClick={() => setMobileLangModalOpen(false)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
-                aria-label="Cerrar selector de idiomas"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  {language === 'fr' ? 'Sélectionnez votre langue' : language === 'es' ? 'Seleccionar idioma' : 'Select language'}
+                </h3>
+                <p className="text-[11px] text-slate-500">
+                  {language === 'fr' ? 'Disponible en 6 langues européennes' : 'Disponible en 6 idiomas europeos'}
+                </p>
+              </div>
             </div>
-
-            {/* List of 6 Languages */}
-            <div className="grid grid-cols-2 gap-2">
-              {languagesList.map((lang) => {
-                const isSelected = language === lang.code;
-                return (
-                  <button
-                    key={lang.code}
-                    type="button"
-                    onClick={() => {
-                      setLanguage(lang.code);
-                      setMobileLangModalOpen(false);
-                    }}
-                    className={`flex items-center justify-between p-3 rounded-xl border text-left transition-all duration-150 cursor-pointer active:scale-95 ${
-                      isSelected
-                        ? 'bg-[#0071ce] text-white border-[#0071ce] font-extrabold shadow-md ring-2 ring-blue-300'
-                        : 'bg-slate-50 text-slate-800 border-slate-200 hover:border-[#0071ce] hover:bg-blue-50/60'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="text-xl shrink-0">{lang.flag}</span>
-                      <div className="min-w-0">
-                        <div className={`text-xs truncate ${isSelected ? 'text-white' : 'text-slate-900 font-bold'}`}>
-                          {lang.label}
-                        </div>
-                        <div className={`text-[10px] font-mono uppercase ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
-                          {lang.code}
-                        </div>
-                      </div>
-                    </div>
-                    {isSelected && <Check className="w-4 h-4 text-white shrink-0" />}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Close button pill */}
             <button
               type="button"
               onClick={() => setMobileLangModalOpen(false)}
-              className="w-full mt-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer"
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Fermer"
             >
-              {language === 'es' ? 'Listo' : 'Done'}
+              <X className="w-5 h-5" />
             </button>
           </div>
-        </div>
-      )}
 
-      {/* Fixed Mobile Bottom Tab Bar - Primary Mobile Navigation */}
+          {/* List of 6 Languages */}
+          <div className="grid grid-cols-2 gap-2.5 my-2">
+            {languagesList.map((lang) => {
+              const isSelected = language === lang.code;
+              return (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectLanguage(lang.code);
+                  }}
+                  className={`flex items-center justify-between p-3.5 rounded-2xl border text-left transition-all duration-150 cursor-pointer active:scale-95 ${
+                    isSelected
+                      ? 'bg-[#0071ce] text-white border-[#0071ce] font-extrabold shadow-md ring-2 ring-blue-300'
+                      : 'bg-slate-50 text-slate-800 border-slate-200 hover:border-[#0071ce] hover:bg-blue-50/60 active:bg-blue-100'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <span className="text-2xl shrink-0">{lang.flag}</span>
+                    <div className="min-w-0">
+                      <div className={`text-xs truncate ${isSelected ? 'text-white font-bold' : 'text-slate-900 font-bold'}`}>
+                        {lang.label}
+                      </div>
+                      <div className={`text-[10px] font-mono uppercase ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                        {lang.code}
+                      </div>
+                    </div>
+                  </div>
+                  {isSelected && <Check className="w-4 h-4 text-white shrink-0" />}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Close button pill */}
+          <button
+            type="button"
+            onClick={() => setMobileLangModalOpen(false)}
+            className="w-full mt-3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-colors cursor-pointer active:scale-98"
+          >
+            {language === 'fr' ? 'Fermer' : language === 'es' ? 'Listo' : 'Done'}
+          </button>
+        </div>
+      </div>,
+      document.body
+    )}
+
+    {/* 
+      Fixed Mobile Bottom Tab Bar - Primary Mobile Navigation
+      Rendered via createPortal to document.body so it is guaranteed to sit cleanly at the bottom
+      of the mobile viewport without interfering with sticky header containers.
+    */}
+    {typeof document !== 'undefined' && createPortal(
       <nav 
         aria-label="Navegación móvil inferior"
         className="sm:hidden fixed bottom-0 left-0 right-0 z-40 w-full max-w-full bg-white/95 backdrop-blur-md border-t border-neutral-200/90 h-16 py-1 px-1.5 flex items-center justify-around shadow-xl pb-[max(0.4rem,env(safe-area-inset-bottom))] box-border overflow-x-hidden"
@@ -365,7 +426,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           title="Ir al inicio"
         >
           <Shield className="w-4.5 h-4.5 mb-0.5 shrink-0" />
-          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">Inicio</span>
+          <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">
+            {language === 'fr' ? 'Accueil' : 'Inicio'}
+          </span>
         </button>
 
         {/* 2. Servicios (Qué hacemos) */}
@@ -432,20 +495,23 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* 6. Idioma (with flag & modal toggle) */}
         <button
+          type="button"
           onClick={() => setMobileLangModalOpen(true)}
           className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
             mobileLangModalOpen 
               ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
               : 'text-slate-700 hover:text-[#0071ce] hover:bg-blue-50/60'
           }`}
-          title="Cambiar idioma"
+          title="Changer de langue / Cambiar idioma"
         >
           <span className="text-base leading-none mb-0.5 shrink-0">{currentLangObj.flag}</span>
           <span className="text-[10px] font-mono font-bold tracking-tight uppercase truncate max-w-full">
             {currentLangObj.code}
           </span>
         </button>
-      </nav>
-    </header>
-  );
+      </nav>,
+      document.body
+    )}
+  </>
+);
 };

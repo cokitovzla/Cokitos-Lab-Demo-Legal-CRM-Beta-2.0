@@ -197,7 +197,7 @@ export interface Translations {
   };
 }
 
-const translationsData: Record<Language, Translations> = {
+export const translationsData: Record<Language, Translations> = {
   es: {
     nav: {
       whyUs: 'Por qué',
