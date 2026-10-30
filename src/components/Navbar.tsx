@@ -132,19 +132,47 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Zone 3 Desktop Actions: Languages (ES, FR, EN, IT, DE, PT) + Exact Mode States */}
+          {/* Zone 3 Desktop Actions: 1. Icono CRM -> 2. Icono Idioma -> 3. Iniciar sesión */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-2.5 shrink-0">
             
-            {/* 6 Languages Selector (ES · FR · EN · IT · DE · PT) */}
+            {/* 1. El icono solamente del CRM */}
+            {currentView === 'admin' ? (
+              <button
+                onClick={() => onNavigate('landing')}
+                data-track-section="navbar"
+                data-track-action="back_to_web"
+                className="p-2 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-xl shadow-2xs transition-all flex items-center justify-center cursor-pointer active:scale-95 group"
+                title="Volver al Sitio Web Principal"
+                aria-label="Volver al Sitio Web Principal"
+              >
+                <Briefcase className="w-4 h-4 text-emerald-600 transition-transform group-hover:scale-110" />
+              </button>
+            ) : (
+              <button
+                onClick={() => onNavigate('admin')}
+                data-track-section="navbar"
+                data-track-action="crm_shortcut"
+                className="relative p-2 text-slate-700 hover:text-[#0071ce] bg-slate-100 hover:bg-blue-50/80 active:bg-blue-100 border border-slate-200 hover:border-blue-200 rounded-xl shadow-2xs transition-all flex items-center justify-center cursor-pointer active:scale-95 group"
+                title="Acceder al Panel CRM Interno"
+                aria-label="Panel CRM Interno"
+              >
+                <LayoutDashboard className="w-4 h-4 text-slate-700 group-hover:text-[#0071ce] transition-transform group-hover:scale-110" />
+                {unreadLeadsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#0071ce] rounded-full ring-2 ring-white" />
+                )}
+              </button>
+            )}
+
+            {/* 2. El icono de cambiar el idioma */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-lg border border-slate-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-base leading-none rounded-xl border border-slate-200 flex items-center justify-center transition-colors cursor-pointer shadow-2xs active:scale-95"
                 title="Cambiar idioma / Change language"
+                aria-label="Cambiar idioma"
               >
                 <span>{currentLangObj.flag}</span>
-                <span className="font-mono">{currentLangObj.code.toUpperCase()}</span>
-                <ChevronDown className="w-3 h-3 text-slate-500" />
               </button>
 
               {langDropdownOpen && (
@@ -172,73 +200,36 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* When in CRM View: "CRM activo y ya" + single sleek Back to Web action (no duplicate login buttons) */}
-            {currentView === 'admin' ? (
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-1.5 shadow-2xs">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span>CRM activo</span>
-                </span>
+            {/* 3. Iniciar sesión / Mi Portal */}
+            {currentUser ? (
+              <div className="flex items-center gap-1.5">
                 <button
-                  onClick={() => onNavigate('landing')}
-                  data-track-section="navbar"
-                  data-track-action="back_to_web"
-                  className="px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 hover:border-slate-400 rounded-lg shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
-                  title="Volver al Sitio Web Principal"
+                  onClick={() => onNavigate('portal')}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 flex items-center gap-1.5 cursor-pointer transition-all"
                 >
-                  <Briefcase className="w-3.5 h-3.5 text-[#0071ce]" />
-                  <span>{t.nav.backToWeb}</span>
+                  <FolderKanban className="w-3.5 h-3.5 text-[#0071ce]" />
+                  <span>Mi Portal</span>
+                </button>
+                <button
+                  onClick={logout}
+                  className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                  title="Cerrar sesión"
+                  aria-label="Cerrar sesión"
+                >
+                  <LogOut className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              /* When in Landing View: Login + Primary CRM Shortcut */
-              <div className="flex items-center gap-2">
-                {currentUser ? (
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={() => onNavigate('portal')}
-                      className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <FolderKanban className="w-3.5 h-3.5" />
-                      <span>Mi Portal</span>
-                    </button>
-                    <button
-                      onClick={logout}
-                      className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg transition-colors cursor-pointer"
-                      title="Cerrar sesión"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => onOpenAuth('login')}
-                    data-track-section="navbar"
-                    data-track-action="login_click"
-                    className="px-3 py-1.5 text-xs font-bold text-slate-700 hover:text-[#0071ce] hover:bg-blue-50/80 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer border border-slate-200"
-                    title="Iniciar sesión / Registro"
-                  >
-                    <LogIn className="w-3.5 h-3.5 text-[#0071ce]" />
-                    <span>{t.nav.login}</span>
-                  </button>
-                )}
-
-                <button
-                  onClick={() => onNavigate('admin')}
-                  data-track-section="navbar"
-                  data-track-action="crm_shortcut"
-                  className="px-3.5 py-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 active:bg-black rounded-lg shadow-xs hover:shadow transition-all flex items-center gap-1.5 cursor-pointer active:scale-95"
-                  title="Acceder al Panel CRM Interno"
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5 text-blue-400" />
-                  <span>{t.nav.crm}</span>
-                  {unreadLeadsCount > 0 && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.2 bg-[#0071ce] text-white rounded-full">
-                      {unreadLeadsCount}
-                    </span>
-                  )}
-                </button>
-              </div>
+              <button
+                onClick={() => onOpenAuth('login')}
+                data-track-section="navbar"
+                data-track-action="login_click"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-800 hover:text-white bg-slate-100 hover:bg-[#0071ce] rounded-xl transition-all flex items-center gap-1.5 cursor-pointer border border-slate-200 shadow-2xs active:scale-95"
+                title="Iniciar sesión / Registro"
+              >
+                <LogIn className="w-3.5 h-3.5 text-[#0071ce] group-hover:text-white" />
+                <span>{t.nav.login}</span>
+              </button>
             )}
 
           </div>
@@ -419,23 +410,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">{t.nav.contact}</span>
         </button>
 
-        {/* 5. Idioma (with flag & modal toggle) */}
-        <button
-          onClick={() => setMobileLangModalOpen(true)}
-          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
-            mobileLangModalOpen 
-              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
-              : 'text-slate-700 hover:text-[#0071ce] hover:bg-blue-50/60'
-          }`}
-          title="Cambiar idioma"
-        >
-          <span className="text-base leading-none mb-0.5 shrink-0">{currentLangObj.flag}</span>
-          <span className="text-[10px] font-mono font-bold tracking-tight uppercase truncate max-w-full">
-            {currentLangObj.code}
-          </span>
-        </button>
-
-        {/* 6. CRM / Web Switch */}
+        {/* 5. CRM / Web Switch */}
         <button
           onClick={() => onNavigate(currentView === 'admin' ? 'landing' : 'admin')}
           className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
@@ -452,6 +427,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           )}
           <span className="text-[10px] font-semibold tracking-tight truncate max-w-full">
             {currentView === 'admin' ? 'Web' : 'CRM'}
+          </span>
+        </button>
+
+        {/* 6. Idioma (with flag & modal toggle) */}
+        <button
+          onClick={() => setMobileLangModalOpen(true)}
+          className={`flex-1 flex flex-col items-center justify-center min-w-0 min-h-[46px] px-1 py-1 rounded-xl transition-all duration-150 cursor-pointer active:scale-90 ${
+            mobileLangModalOpen 
+              ? 'text-white bg-[#0071ce] font-extrabold shadow-sm' 
+              : 'text-slate-700 hover:text-[#0071ce] hover:bg-blue-50/60'
+          }`}
+          title="Cambiar idioma"
+        >
+          <span className="text-base leading-none mb-0.5 shrink-0">{currentLangObj.flag}</span>
+          <span className="text-[10px] font-mono font-bold tracking-tight uppercase truncate max-w-full">
+            {currentLangObj.code}
           </span>
         </button>
       </nav>
