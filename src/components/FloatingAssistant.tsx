@@ -240,7 +240,7 @@ export const FloatingAssistant: React.FC<FloatingAssistantProps> = ({
           className={`relative group p-2 sm:p-2.5 bg-gradient-to-r from-[#0B192C] via-[#1E3E62] to-[#0071ce] text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer border-2 ${
             isOpen ? 'border-sky-300 ring-2 ring-sky-400/50' : 'border-sky-400/40'
           }`}
-          title="Astro · Juez Virtual de Cokito's Lab"
+          title="Astro · Juez Virtual de Cokito's lab"
           aria-label="Abrir juez virtual Astro"
         >
           <VirtualJudgeIcon size={30} showBadge={!isOpen} />

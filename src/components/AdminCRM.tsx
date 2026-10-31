@@ -418,7 +418,7 @@ export const AdminCRM: React.FC<AdminCRMProps> = ({
         </div>
       </div>
 
-      {/* Cokito's Lab Demonstration Showcase Header */}
+      {/* Cokito's lab Demonstration Showcase Header */}
       <div className="bg-gradient-to-r from-sky-50 via-blue-50/70 to-indigo-50/50 border-b border-blue-200/80 px-4 sm:px-6 py-2.5 w-full max-w-full">
         <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
           <div className="flex items-center gap-2 text-slate-800">

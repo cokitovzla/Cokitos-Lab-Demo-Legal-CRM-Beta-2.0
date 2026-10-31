@@ -7,7 +7,7 @@ interface VirtualJudgeIconProps {
 }
 
 /**
- * VirtualJudgeIcon - "Astro", el juecesito / abogadito virtual de Cokito's Lab.
+ * VirtualJudgeIcon - "Astro", el juecesito / abogadito virtual de Cokito's lab.
  * Diseñado con toga judicial, solapas blancas (jabot de juez/abogado), 
  * martillo de juez dorado (gavel), ojos tecnológicos amigables y halo de IA.
  */

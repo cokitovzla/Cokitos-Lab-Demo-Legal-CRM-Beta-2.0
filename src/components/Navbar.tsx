@@ -101,13 +101,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-3 lg:gap-4 h-14 sm:h-15">
           
-          {/* Zone 1: Logo Wordmark (Cokito's Lab International) */}
+          {/* Zone 1: Logo Wordmark (Cokito's lab International) */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={handleLogoClick}
               className="flex items-center gap-2 text-left group focus-visible:outline-none cursor-pointer"
-              title="Cokito's Lab International"
-              aria-label="Cokito's Lab International Inicio"
+              title="JurisNova International · Cokito's lab"
+              aria-label="JurisNova International Inicio"
             >
               <CokitosLogo />
             </button>
@@ -299,7 +299,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="button"
               onClick={() => window.dispatchEvent(new CustomEvent('open-astro-ai'))}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-[#0B192C] via-[#1E3E62] to-[#0071ce] hover:brightness-110 active:scale-95 text-white rounded-xl shadow-xs border border-sky-400/40 transition-all text-xs font-bold cursor-pointer"
-              title="Astro · Juez Virtual de Cokito's Lab"
+              title="Astro · Juez Virtual de Cokito's lab"
               aria-label="Abrir juez virtual Astro"
             >
               <VirtualJudgeIcon size={24} showBadge />

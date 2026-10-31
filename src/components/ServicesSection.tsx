@@ -75,7 +75,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ onSelectAreaFo
     <section id="que-hacemos" className="py-8 sm:py-10 lg:py-12 bg-slate-50/70 border-b border-slate-200 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Editorial Section Header: Cokito's Lab recommended modular architecture */}
+        {/* Editorial Section Header: Cokito's lab recommended modular architecture */}
         <div className="w-full max-w-4xl mb-6 sm:mb-8 text-left">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-[#0071ce] uppercase mb-2 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200/60">
             <Briefcase className="w-3.5 h-3.5 text-[#0071ce]" />

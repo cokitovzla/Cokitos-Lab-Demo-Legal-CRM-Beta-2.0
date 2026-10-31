@@ -14,6 +14,8 @@ import { DiagnosticSection } from './components/DiagnosticSection';
 import { ContactSection } from './components/ContactSection';
 import { ExpandableDrawers } from './components/ExpandableDrawers';
 import { CokitosLabAgencySection } from './components/CokitosLabAgencySection';
+import { LegalTechPlansSection } from './components/LegalTechPlansSection';
+import { CokitosLabBanner } from './components/CokitosLabBanner';
 import { Footer } from './components/Footer';
 import { AdminCRM } from './components/AdminCRM';
 import { ClientPortal } from './components/ClientPortal';
@@ -649,6 +651,10 @@ function MainAppContent() {
           <HowSection
             onStartDiagnosis={() => handleToggleDiagnostic(true)}
           />
+          {/* Matriz comparativa de versiones Alfa, Beta y Omega */}
+          <LegalTechPlansSection
+            onOpenCRM={() => handleNavigate('admin')}
+          />
           <TeamSection />
           
           {/* Contact Section placed immediately after Team Section */}
@@ -658,7 +664,7 @@ function MainAppContent() {
             onNewLeadCreated={handleNewLeadCreated}
           />
 
-          {/* Cokito's Lab International: Solution Lab Showcase & Case Study */}
+          {/* Cokito's lab International: Solution Lab Showcase & Case Study */}
           <CokitosLabAgencySection
             onOpenCRM={() => handleNavigate('admin')}
             onOpenContact={() => handleNavigate('landing', 'contacto')}
@@ -674,6 +680,9 @@ function MainAppContent() {
             preselectedArea={preselectedArea}
             onOpenAuth={handleOpenAuth}
           />
+
+          {/* Banner unificado de autoría y créditos de Cokito's lab (armónico y situado arriba del Footer) */}
+          <CokitosLabBanner />
 
           <Footer
             onNavigateSection={(sec) => {
